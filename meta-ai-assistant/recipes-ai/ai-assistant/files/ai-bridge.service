@@ -1,0 +1,13 @@
+[Unit]
+Description=AI Bridge - Gemini API
+After=camera-stream.service
+Requires=camera-stream.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /opt/ai-assistant/ai_bridge.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

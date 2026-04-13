@@ -1,0 +1,13 @@
+[Unit]
+Description=AI Rover Assistant UI Server
+After=ai-bridge.service
+Requires=ai-bridge.service
+
+[Service]
+Type=simple
+ExecStart=/opt/ai-assistant/ui-server
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

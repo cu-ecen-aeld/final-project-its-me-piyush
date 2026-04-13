@@ -1,0 +1,33 @@
+Upstream-Status: Inappropriate [configuration]
+
+--- a/core/rpicam_encoder.hpp	2026-03-22 14:53:16.024544074 -0600
++++ b/core/rpicam_encoder.hpp	2026-03-22 14:55:38.337621081 -0600
+@@ -30,17 +30,6 @@
+ 		encoder_->SetInputDoneCallback(std::bind(&RPiCamEncoder::encodeBufferDone, this, std::placeholders::_1));
+ 		encoder_->SetOutputReadyCallback(encode_output_ready_callback_);
+ 
+-		// Set up the encode function to wait for synchronisation with another camera system,
+-		// when this has been requested in the options.
+-		VideoOptions const *options = GetOptions();
+-		libcamera::ControlList cl;
+-		if (options->sync == 0)
+-			cl.set(libcamera::controls::rpi::SyncMode, libcamera::controls::rpi::SyncModeOff);
+-		else if (options->sync == 1)
+-			cl.set(libcamera::controls::rpi::SyncMode, libcamera::controls::rpi::SyncModeServer);
+-		else if (options->sync == 2)
+-			cl.set(libcamera::controls::rpi::SyncMode, libcamera::controls::rpi::SyncModeClient);
+-		SetControls(cl);
+ 	}
+ 	// This is callback when the encoder gives you the encoded output data.
+ 	void SetEncodeOutputReadyCallback(EncodeOutputReadyCallback callback) { encode_output_ready_callback_ = callback; }
+@@ -49,10 +38,6 @@
+ 	{
+ 		assert(encoder_);
+ 
+-		// If sync was enabled, and SyncReady is still "false" then we must skip this frame. Tell our
+-		// caller through the return value that we're not yet encoding anything.
+-		if (GetOptions()->sync && !completed_request->metadata.get(controls::rpi::SyncReady).value_or(false))
+-			return false;
+ 
+ 		StreamInfo info = GetStreamInfo(stream);
+ 		FrameBuffer *buffer = completed_request->buffers[stream];

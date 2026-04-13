@@ -1,0 +1,26 @@
+#!/bin/sh
+
+case "$1" in
+  start)
+    echo "Starting AI Assistant"
+    /usr/bin/python3 /opt/ai-assistant/main.py > /var/log/ai-assistant.log 2>&1 &
+    echo $! > /var/run/ai-assistant.pid
+    ;;
+  stop)
+    if [ -f /var/run/ai-assistant.pid ]; then
+      kill "$(cat /var/run/ai-assistant.pid)" 2>/dev/null
+      rm -f /var/run/ai-assistant.pid
+    fi
+    ;;
+  restart)
+    $0 stop
+    sleep 1
+    $0 start
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart}"
+    exit 1
+    ;;
+esac
+
+exit 0

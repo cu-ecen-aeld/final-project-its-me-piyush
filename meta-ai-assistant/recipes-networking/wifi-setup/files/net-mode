@@ -1,0 +1,26 @@
+#!/bin/sh
+case "$1" in
+start)
+    echo "Starting net-mode-select"
+    /usr/bin/net-mode-select.sh &
+    # Wait for network to settle then start watchdog
+    (sleep 45 && /usr/bin/wifi-watchdog.sh) &
+    ;;
+stop)
+    killall wpa_supplicant 2>/dev/null
+    killall udhcpc 2>/dev/null
+    killall hostapd 2>/dev/null
+    killall dnsmasq 2>/dev/null
+    killall python3 2>/dev/null
+    ;;
+restart)
+    $0 stop
+    sleep 3
+    $0 start
+    ;;
+*)
+    echo "Usage: $0 {start|stop|restart}"
+    exit 1
+    ;;
+esac
+exit 0

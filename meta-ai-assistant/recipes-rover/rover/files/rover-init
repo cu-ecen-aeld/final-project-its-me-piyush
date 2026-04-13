@@ -1,0 +1,37 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          rover
+# Required-Start:    $network
+# Default-Start:     3 5
+# Default-Stop:      0 1 2 6
+# Description:       Rover AI daemon
+### END INIT INFO
+
+ROVER=/usr/bin/rover
+WEB=/opt/ai-assistant/rover_web.py
+ROVER_LOG=/var/log/rover-stdout.log
+WEB_LOG=/var/log/rover-web.log
+
+case "$1" in
+    start)
+        echo "Starting rover..."
+        $ROVER > $ROVER_LOG 2>&1 &
+        sleep 2
+        echo "Starting rover web UI..."
+        python3 $WEB > $WEB_LOG 2>&1 &
+        ;;
+    stop)
+        echo "Stopping rover..."
+        pkill rover
+        pkill -f rover_web.py
+        ;;
+    restart)
+        $0 stop
+        sleep 1
+        $0 start
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|restart}"
+        exit 1
+        ;;
+esac

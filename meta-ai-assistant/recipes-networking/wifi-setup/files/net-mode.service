@@ -1,0 +1,11 @@
+[Unit]
+Description=WiFi Mode Selector
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/net-mode-select.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

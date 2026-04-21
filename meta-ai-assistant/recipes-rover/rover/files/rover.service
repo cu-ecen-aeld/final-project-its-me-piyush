@@ -1,0 +1,13 @@
+[Unit]
+Description=AI Rover Hybrid Controller
+After=can0.service ai-bridge.service camera-stream.service
+Requires=can0.service
+
+[Service]
+Type=simple
+ExecStart=/opt/rover/rover_hybrid
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
